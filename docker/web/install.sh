@@ -97,8 +97,8 @@ rm -rfv ~/.composer
 # yum -y install newrelic-php5
 # rm -fv /tmp/nrinstall-*.tar
 
-yum install -y wget
-yum localinstall https://www.linuxglobal.com/static/blog/pdftk-2.02-1.el7.x86_64.rpm
+# yum install -y wget
+# yum localinstall https://www.linuxglobal.com/static/blog/pdftk-2.02-1.el7.x86_64.rpm
 
 # wget https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-1.el6.x86_64.rpm
 # yum install libgcj
