@@ -124,13 +124,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['cnpj'])) {
     foreach ($corretoras as $nome => $dados) {
         $aux = file_get_contents("templates/{$dados['file']}");
         $pdf_file = str_replace(".fdf",'.pdf', $dados['file']);
+        $outputfile = str_replace(".fdf",'', $dados['file']) .'-' .clean($_POST['cnpj']) . ".pdf";
 
         foreach ($dados['fields'] as $chave => $troca) {
             $aux = str_replace("(||{$chave}||)", "(".utf8_decode($base[$troca]).")", $aux);
         }
 
         file_put_contents("templates/__{$dados['file']}", $aux);
-        $command = "pdftk originals/{$pdf_file} fill_form templates/__{$dados['file']} output {$pdf_file}";
+        $command = "pdftk originals/{$pdf_file} fill_form templates/__{$dados['file']} output {$outputfile}";
 
         exec($command, $output);
     }
@@ -159,12 +160,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['cnpj'])) {
   </head>
   <body class="container-fluid">
 
-    <div class="row">
+    <div class="row" style="margin-bottom: 20px;">
         <div class="col-md-12">
             <form class="form-inline" method="POST">
               <div class="form-group">
                 <label for="cnpj">CNPJ</label>
-                <input type="text" class="form-control" id="cnpj" name="cnpj" value="<?PHP echo $_POST['cnpj'];?>">
+                <input type="text" class="form-control" id="cnpj" name="cnpj" value="<?PHP echo isset($_POST['cnpj']) ? $_POST['cnpj'] : '' ;?>">
               </div>
               <button type="submit" class="btn btn-primary">Buscar Dados</button> 
               <span class="label label-default" data-cnpj="21.129.438/0001-44">Meu Cambio</span>
@@ -173,6 +174,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['cnpj'])) {
               <span class="label label-default" data-cnpj="33.592.510/0001-54">Vale</span>
             </form>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <strong>Arquivos Gerados</strong>
+            <ul class="list-group">
+                <?PHP
+                foreach (glob("*.pdf") as $arquivo) {
+                    echo "<li class=\"list-group-item\"><a href='{$arquivo}'>{$arquivo}</li>";
+                }                
+                ?>
+            </ul>            
+        </div>
+    
+
     </div>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
